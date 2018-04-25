@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <style type="text/css">
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      #container {
+        width : 600px;
+        height: 384px;
+        margin: 8px auto;
+      }
+      #chart {
+        width : 600px;
+        height: 384px;
+        margin: 8px auto;
+      }
+    </style>
+  </head>
+  <body>
+  <!--  <div id="container"></div> -->
+    <div id="chart"></div>
+    <!--[if IE]>
+    <script type="text/javascript" src="/static/lib/FlashCanvas/bin/flashcanvas.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="__JS__/flotr2.min.js"></script>
+    <script type="text/javascript">
+   
+    
+    (function basic_radar(container) {
+
+  // Fill series s1 and s2.
+  var
+    s1 = { label : '平均值', data : [[0, 41], [1, 80], [2, 85], [3, 75], [4, 93], [5, 90], [6,91], [7,70], [8,80]] },
+     s2 = { label : '个人', data : [[0, {$scorelist[0].score}], [1, {$scorelist[1].score}], [2, {$scorelist[2].score}], [3, {$scorelist[3].score}], [4, {$scorelist[4].score}], [5, {$scorelist[5].score}], [6,{$scorelist[6].score}], [7,{$scorelist[7].score}], [8,{$scorelist[8].score}]] },
+    graph, subject;
+//var test={$scorelist.sId};
+  // Radar Labels
+  subject = [
+    [0, "语文"],
+    [1, "数学"],
+    [2, "英语"],
+    [3, "历史"],
+    [4, "物理"],
+    [5, "生物"],
+    [6, "政治"],
+    [7, "地理"],
+    [8, "化学"]
+  ];
+   
+    
+  // Draw the graph.
+  graph = Flotr.draw(container, [ s1, s2 ], {
+    radar : { show : true}, 
+    grid  : { circular : true, minorHorizontalLines : true}, 
+    yaxis : { min : 30, max : 100, minorTickFreq : 5}, 
+    xaxis : { ticks : subject}
+  });
+})(document.getElementById("chart"));
+        
+        
+    </script>
+  </body>
+</html>

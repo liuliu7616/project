@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Flotr Example Index Page</title>
+  <link rel="stylesheet" href="lib/codemirror/lib/codemirror.css" type="text/css" />
+  <link rel="stylesheet" href="examples.css" type="text/css" />
+  <link rel="stylesheet" href="editor.css" type="text/css" />
+</head>
+
+<body>
+  <div id="body-container">
+    <div id="content-container">
+      <div id="content">
+        <div id="examples"></div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+        var players = [
+            { player: "张三",html: 17.2, css: 7.9, js: 1.6, nodeJS: 0.8, angularJS: 0.8 }, 
+            { player: "李四", html: 5.4, css: 2.6, js: 1.2,nodeJS: 1.0, angularJS: 0.5 }, 
+            { player: "王五", html: 28.0, css: 8.4, js: 6.1,nodeJS: 1.9,angularJS: 0.8 },
+            { player: "程六",html: 22.3, css: 5.0, js: 4.5, nodeJS: 1.7, angularJS: 1.3 },
+            { player: "谷七", html: 10.2, css: 2.9, js: 3.6, nodeJS: 1.4, angularJS: 0.2 } 
+            ]; 
+        var team = {
+            html: 98.2,
+            css: 41.3,
+            js: 19.3,
+            nodeJS: 8.5,
+            angularJS: 5.3,
+        };
+        var labels = [
+            [0, "html"],
+            [1, "css"],
+            [2, "js"],
+            [3, "nodeJS"],
+            [4, "angularJS"] 
+        ];
+        var get_player = function(name) {
+               for (var i=0; i<players.length; i++) {
+                   if (players[i].player === name) return players[i];
+               } 
+        } 
+        var player_data = function(name) { 
+            var obj = {}, i = 0;
+            obj.label = name; 
+            obj.data = []; 
+            for (var key in team) {
+                obj.data.push([i, 100*get_player(name)[key]/team[key]]); 
+                i++; 
+            };
+            return obj; 
+        };
+        window.onload = function(){
+            Flotr.draw(
+                document.getElementById("chart"), 
+                [
+                    player_data("张三"),
+                    player_data("李四"),
+                    player_data("王五"),
+                    player_data("程六"),
+                    player_data("谷七"),
+                ],{
+                    title:"测试",
+                    radar:{show:true},
+                    grid:{circular:true,},
+                    xaxis:{ticks:labels,},
+                    yaxis:{showLabels:false,min:0,max:33,},
+                }
+            )
+        }
+  </script>
+</body>
+        
+
+<script type="text/javascript" src="../lib/yepnope.js"></script>
+
+<script type="text/javascript" src="js/includes.min.js"></script>
+
+</html>
+        
+        
+            
+        
