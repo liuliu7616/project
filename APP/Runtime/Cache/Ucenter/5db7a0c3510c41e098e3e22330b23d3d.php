@@ -30,11 +30,14 @@
                     <ul class="nav nav-inline nav-menu nav-tabs nav-big">
                         <li><a href="<?php echo U('Teacher/index');?>" class="lls <?php echo $state == 'index' ? 'active' : '';?>">登录信息</a></li>
                         <li><a href="<?php echo U('Teacher/person');?>" class="lls <?php echo $state == 'person' ? 'active' : '';?>">个人管理</a></li>
+
+                        <!--
                         <li><a href="<?php echo U('Teacher/add');?>" class="lls <?php echo $state == 'add' ? 'active' : '';?>">新增毕设</a></li>
                         <li><a href="<?php echo U('Teacher/bslist');?>" class="lls <?php echo $state == 'bslist' ? 'active' : '';?>">毕设列表</a></li>
                         <li><a href="<?php echo U('Teacher/msg');?>" class="lls <?php echo $state == 'msg' ? 'active' : '';?>">消息管理</a></li>
-                        <li><a href="<?php echo U('Teacher/plan');?>" class="lls <?php echo $state == 'plan' ? 'active' : '';?>">进度管理</a></li>
+                        <li><a href="<?php echo U('Teacher/plan');?>" class="lls <?php echo $state == 'plan' ? 'active' : '';?>">进度管理</a></li> -->
                         <li><a href="<?php echo U('Teacher/edit_score');?>" class="lls <?php echo $state == 'edit_score' ? 'active' : '';?>">成绩录入</a></li>
+                        <li><a href="<?php echo U('Teacher/scoreimport');?>" class="lls <?php echo $state == 'scoreimport' ? 'active' : '';?>">成绩批量导入</a></li>
                     </ul>
                 </div>
             </div>
@@ -67,10 +70,14 @@
                 <table class="table table-hover">
                     <tr>
                         <th width="80">学号</th>
-                        <th width="110">姓名</th>
-                        <th width="110">成绩</th>
-                        <th width="160">试卷是否上传</th>
-                        <th width="140">录入成绩</th>
+                        <th width="100">姓名</th>
+                        <th width="60">第1部分成绩</th>
+                        <th width="60">第2部分成绩</th>
+                        <th width="60">第3部分成绩</th>
+                    <!--    <th width="60">第4部分成绩</th>
+                        <th width="60">第5部分成绩</th>-->
+                        <th width="120">试卷是否上传</th>
+                        <th width="1"></th>
                         <th width="90">上传试卷</th>
                     </tr>
                     <?php if(is_array($scoreList)): $i = 0; $__LIST__ = $scoreList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$index): $mod = ($i % 2 );++$i;?><tr>
@@ -78,10 +85,23 @@
                         <td><?php echo ($index["stuRealName"]); ?></td>
                         <td>
                             <input type="hidden" name="stuid" value="<?php echo ($index["stuId"]); ?>"/>
-                            <input type="hidden" name="cid" value="<?php echo ($index["cId"]); ?>"/>                        
-                            <input type=text name="score" onblur="checkscore(this)" value="<?php echo ($index["score"]); ?>">
-                            <input type="hidden" name="score_back" value="<?php echo ($index["score"]); ?>"/>
+                            <input type="hidden" name="cid" value="<?php echo ($index["cId"]); ?>"/>                 
+                            <input width="60" type=text name="score1" onblur="checkscore(this)" value="<?php echo ($index["part1"]); ?>">
+                            <input type="hidden" name="score_back" value="<?php echo ($index["part1"]); ?>"/>
                         </td>
+                        <td>
+                            <input type="hidden" name="stuid" value="<?php echo ($index["stuId"]); ?>"/>
+                            <input type="hidden" name="cid" value="<?php echo ($index["cId"]); ?>"/>                 
+                            <input type=text name="score2" onblur="checkscore(this)" value="<?php echo ($index["part2"]); ?>">
+                            <input type="hidden" name="score_back" value="<?php echo ($index["part2"]); ?>"/>
+                        </td>
+                        <td>
+                            <input type="hidden" name="stuid" value="<?php echo ($index["stuId"]); ?>"/>
+                            <input type="hidden" name="cid" value="<?php echo ($index["cId"]); ?>"/>                 
+                            <input type=text name="score3" onblur="checkscore(this)" value="<?php echo ($index["part3"]); ?>">
+                            <input type="hidden" name="score_back" value="<?php echo ($index["part3"]); ?>"/>
+                        </td>
+               
                       
                         <td>
                             <?php if($index["paperUrl"] == NULL): ?><a class="button border-black button-little">未上传</a>
@@ -90,7 +110,7 @@
                         </td>
                           <td> 
                             <input type="hidden" name="cid" value="<?php echo ($index["cId"]); ?>"/>                             
-                            <a class="button border-yellow button-little dialogs" name="save_score" href="#"  data-mask="1"  onclick="javascript:savescore()" data-width="50%">保存成绩</a>
+                            <a style="display: none" class="button border-yellow button-little dialogs" name="save_score" href="#"  data-mask="1"  onclick=" " data-width="50%">保存成绩</a>
 
                         </td>
                         <td>
@@ -99,16 +119,22 @@
                                 <input type="hidden" name="cid" value="<?php echo ($index["cId"]); ?>"/>
                                 <input type="file" name='uploadfile' /> 
                                 <input type="submit" value="确认上传" />
-                            <!--   <a class="button border-yellow button-little dialogs" name="uploadfile" href="#"  data-mask="1"   data-width="50%">确认上传</a> -->
+                           
                             </form>
                             
                         </td>
                     </tr><?php endforeach; endif; else: echo "" ;endif; ?>
                 </table>
+                <div style="float:right">
+
+            <a  class="button border-blue button-little dialogs" id="submitbutton" name="total_save_score" href="#"  data-mask="1"  onclick="total_save()" data-width="50%" >保存成绩 </a>
+             <a  class="button border-red button-little dialogs" id="uploadscore" name="uploadscore" href="uploadscore"  data-mask="1"   data-width="50%" >上传成绩 </a>
+            </div>
                 
                 <div class="panel-foot text-center">
                 <div class ="green-black"><?php echo ($page); ?></div>
             </div>
+            
             </div>
     <!--    </form>  -->
         
@@ -150,6 +176,15 @@
         </div> 
     </div>
     <script>
+        if(<?php echo ($permission); ?>==1){
+            document.getElementById("submitbutton").setAttribute("disabled", true);
+            document.getElementById("uploadscore").setAttribute("disabled", true);
+            document.getElementById("submitbutton").setAttribute("bg-yellow", true);
+        }
+        else{
+            document.getElementById("submitbutton").setAttribute("bg-red", true);
+            //document.getElementById("submitbutton").setAttribute("disabled", false);
+        }
         
         function checkscore(ob) {
             var old_value= $(ob).next().val();
@@ -160,10 +195,31 @@
              if(!(value.match(/^\d+(?:\.\d{1,2})?$/)&& value>=0 && value<=100 )){
                 alert("输入的值必须为0-100的数字且最多有两位小数");
                 ob.value=old_value;
+             }       
+        }
+        function total_save(){
+            //alert("total_save");
+            console.log("total_save");
+           // save_confirm();
+           var result=window.confirm("保存后不可更改，确认保存？");
+            if (result==true)
+              {
+                
+                var save=document.getElementsByClassName("button border-yellow button-little dialogs");
+                console.log(save.length);
+                var i;
+                for (i = 0; i < save.length; i++) {
 
-             }
-        
-        
+                    save[i].click();
+                }
+              }
+            else
+              {
+              
+              }
+                       
+           
+            //save.click();
         }
     </script>
 
@@ -172,11 +228,11 @@
         function del(){
             window.location.href = "<?php echo U('Teacher/delGP/id/" + ID +"');?>";
         }
-
+/*
         function confirm(stlId){
             window.location.href = "<?php echo U('Teacher/confirm/id/" + stlId + "');?>";
         }
-      
+   */   
         $(function(){
             $(".table a[name='check']").click(function(){
                 ID = $(this).parent().find("input[name='id']").val();
@@ -229,7 +285,7 @@
                     }
                 }); 
             });
-
+/*
             $(".table a[name='detail']").click(function(){
                 ID = $(this).parent().find("input[name='id']").val();
                
@@ -267,7 +323,7 @@
                     }
                 }); 
             });
-
+*/
             $(".table form[name='uplaodform']").click(function(){
                 
             });
@@ -277,11 +333,39 @@
                 ID = id;
             });
             $(".table a[name='save_score']").click(function(){
+                console.log("the save button");
+               
                 var cid = $(this).parent().prev().prev().find("input[name='cid']").val();
                 var stuid = $(this).parent().prev().prev().find("input[name='stuid']").val();
-                var score = $(this).parent().prev().prev().find("input[name='score']").val();
-                window.location.href = "<?php echo U('Teacher/savescore/cid/" + cid +"/stuid/"+stuid+"/score/"+score+"');?>";
-               // alert("<?php echo U('Teacher/savescore/cid/" + cid +"/stuid/"+stuid+"/score/"+score+"');?>");
+                var score1 = $(this).parent().prev().prev().prev().prev().find("input[name='score1']").val();
+                var score2 = $(this).parent().prev().prev().prev().find("input[name='score2']").val();
+                var score3 = $(this).parent().prev().prev().find("input[name='score3']").val();
+               
+               $.ajax({
+                    url: "<?php echo U('Teacher/savescore');?>",
+                    data: {
+                        cid: cid,
+                        stuid : stuid,
+                        score1 : score1,
+                        score2 : score2,
+                        score3 : score3,
+                    },
+                    type: 'post',
+                    dataType: 'json',
+                    success: function(data){
+                        if(data.state == 1){
+                           //alert("post success");
+
+                        }else{
+                          // alert(data.state);
+                        }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                             alert(XMLHttpRequest.status);
+                             alert(XMLHttpRequest.readyState);
+                             alert(textStatus);
+                    }
+                }); 
             });
             
             $(".table a[name='uploadfile']").click(function(){

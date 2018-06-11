@@ -7,7 +7,7 @@ class IndexController extends Controller {
     }
 
     /*
-     *  2015年3月8日22:10:47
+     *  2018年3月8日22:10:47
      *  用户登录处理
      */
     public function doLogin(){
@@ -15,11 +15,12 @@ class IndexController extends Controller {
     	$where['adminPwd'] = md5(I("post.usrpwd"));
 
         $obj = M("admin");
-        $info = $obj->field("adminRealName, state")->where($where)->find();
+        $info = $obj->field("adminRealName, state,adminId")->where($where)->find();
     	if(is_array($info) && isset($info)){
     		session("flag", true);
             session("NAME", $info['adminRealName']);
             session("state", $info['state']);
+            session("adminID", $info['adminId']);
 
     		$this->redirect("Admin/index");
     	}else{

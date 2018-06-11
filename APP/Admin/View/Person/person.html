@@ -1,0 +1,131 @@
+
+<div class="adminme">
+        <form method="post" class="form-x" action="{:U('Person/modifyInfo')}">
+            <div class="form-group">
+                <div class="label"><label for="name">登陆账号</label></div>
+                <div class="field">
+                    <input type="text" class="input" name="usrname" size="50" value="{$admininfo[0]['adminName']}" disabled="disabled" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="label"><label class="oldpwd" for="oldpwd">登录密码</label></div>
+                <div class="field fieldme">
+                    <div class="input-group">
+                        <span class="addon"><input name="chkPwd" type="checkbox" value="1" /></span>
+                        <input type="password" class="input" name="oldpwd" size="50" value="{$admininfo[0]['adminPwd']}" placeholder="请输入原始密码" disabled="disabled" />
+                    </div>
+                </div>
+            </div>
+            <div class="pwdPanel" style="padding-bottom: 10px; display:none;">
+                <div class="form-group">
+                    <div class="label"><label for="pwd">新密码</label></div>
+                    <div class="field">
+                        <input type="password" class="input" name="newpwd" size="50" value=" " placeholder="请输入新登陆密码，位数不小于 5" 
+                        data-validate="required:请填写密码,length#>=5:密码长度不符合要求 (>5)"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="label"><label for="pwd">确认密码</label></div>
+                    <div class="field">
+                        <input type="password" class="input" name="confirmpwd" size="50" value=" " placeholder="再次确认新登陆密码"
+                        data-validate="required:请填写确认密码,repeat#newpwd:两次输入的密码不一致" />
+                    </div>
+                </div>  
+            </div>
+            <div class="form-group">
+                <div class="label"><label for="name">真实姓名</label></div>
+                <div class="field">
+                    <input type="text" class="input" name="realName" size="50" placeholder="真实姓名" data-validate="required:请填写真实姓名" value="{$admininfo[0]['adminRealName']}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="label"><label for="age">用户年龄</label></div>
+                <div class="field">
+                    <input type="text" class="input" name="age" size="50" placeholder="用户年龄" data-validate="required:请填写用户年龄,number:用户年龄必须为整数" value="{$admininfo[0]['adminAge']}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="label"><label>用户性别</label></div>
+                <div class="field">
+                    <div class="button-group radio"> 
+                        <label class="button <?php echo $admininfo[0]['adminSex'] == 1 ? 'active' : null; ?> ">
+                            <input name="sex" value="1"  <?php echo $admininfo[0]['adminSex'] == 1 ? 'checked="checked"' : null; ?>type="radio"><span class="icon icon-male"></span> 男
+                        </label> 
+                        <label class="button <?php echo $admininfo[0]['adminSex'] == 2 ? 'active' : null; ?>">
+                            <input name="sex" value="2"  <?php echo $admininfo[0]['adminSex'] == 2 ? 'checked="checked"' : null; ?>type="radio"><span class="icon icon-female"></span> 女
+                        </label> 
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="label"><label for="phone">联系方式</label></div>
+                <div class="form-group">
+                    <div class="field">
+                      <div class="input-group">
+                      
+                        <input type="text" class="input" name="Phone" size="50"  value="{$admininfo[0]['adminPhone']}" data-validate="required:请填写联系方式" />
+                      </div>
+                    </div>
+                </div>
+            <div class="form-group">
+                <div class="label"><label for="email">邮件地址</label></div>
+                <div class="form-group">
+                    <div class="field">
+                      <div class="input-group">
+                        
+                        <input type="text" class="input" name="Email" size="50"  value="{$admininfo[0]['adminEmail']}"
+                        data-validate="required:请填写邮件地址"/>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="label"><label for="address">家庭地址</label></div>
+                <div class="form-group">
+                    <div class="field">
+                      <div class="input-group">
+                        
+                        <input type="text" class="input" name="Address" size="50"  value="{$admininfo[0]['adminAddress']}" data-validate="required:请填写办公地址" />
+                      </div>
+                    </div>
+                </div>
+            </div>
+                        
+            <div class="form-button">
+                <input type="hidden" name="usrId" value="{$admininfo[0]['adminId']}"/> 
+                <button class="button bg-main" type="submit">提交</button>
+                <button class="button bg-yellow " type="button">后退</button>  
+            </div>                
+        </form>   
+       
+</div>
+        
+    <script>
+        $(function(){
+            var t = $("input[name='oldpwd']").val();
+            $(".pwdPanel input[name='newpwd']").val(t);
+            $(".pwdPanel input[name='confirmpwd']").val(t);
+            function monitor(mythis){
+                
+                if(mythis.is(':checked')){
+                    $(".oldpwd").html('修改密码');
+                    $("input[name='oldpwd']").val("");
+                    $("input[name='oldpwd']").attr('disabled', false);
+                    $(".pwdPanel").show();
+                    $(".pwdPanel input[name='newpwd']").val("");
+                    $(".pwdPanel input[name='confirmpwd']").val("");
+                }else{
+                    $(".oldpwd").html('登陆密码');
+                    $("input[name='oldpwd']").val(t);
+                    $("input[name='oldpwd']").attr('disabled', true);
+                    $(".pwdPanel").hide();
+                    $(".pwdPanel input[name='newpwd']").val(t);
+                    $(".pwdPanel input[name='confirmpwd']").val(t);
+                }
+            }
+
+            $(".fieldme input[type='checkbox']").click(function(){
+                monitor($(this));
+            });
+        });
+    </script>

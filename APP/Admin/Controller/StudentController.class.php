@@ -7,7 +7,7 @@
         }
 
         /*
-         *  2015年3月8日22:14:22
+         *  2018年3月8日22:14:22
          *  后台管理中心-新增教师
          */
         public function index($stuCard = null, $stuName = null, $stuSex = null, $stuMajor = null){
@@ -52,7 +52,7 @@
         }
 
         /*
-         *  2015年3月8日22:14:57
+         *  2018年3月8日22:14:57
          *  后台管理中心-新增学生
          */
         public function add(){
@@ -66,7 +66,7 @@
         }
 
         /*
-         *  2015年3月8日22:15:02
+         *  2018年3月8日22:15:02
          *  后台管理中心-回收站
          */
         public function recycle(){
@@ -84,12 +84,14 @@
         }
 
         /*
-         *  2015年3月10日15:49:35
+         *  2018年3月10日15:49:35
          *  后台管理中心-数据库插入学生数据
          */
         public function addUsr(){
+
             if(IS_POST){
                 $flag = I("post.account");
+
                 if($flag == 'single'){
                     $account = I("post.singleAccount");
                     if(!is_numeric($account)){
@@ -103,6 +105,7 @@
                     $data['stuPwd'] = isset($pwd) && $pwd != "" ? md5($pwd) : md5(666666);
                     $data['stuRealName'] = I("post.name");
                     $data['stuSex'] = I("post.sex");
+                    $data['stuMajor'] = I("post.studentclass");
                     $data['state'] = 1;
                     $time = time();
                     $data['updateTime'] = $time;
@@ -117,7 +120,42 @@
 
                     $flag = $obj->add($data);
                     if($flag){
-                        $this->success("学生新增成功");
+                        /* 这里需要同时绑定score表 在score表中将同一班级的学生和老师的课程在score中插入  */
+                        $obj=M('');
+                        $sql="SELECT thrId, cId FROM course WHERE classId =".I("post.studentclass");
+                        $thridlist=$obj->query($sql);
+                        //var_dump($thridlist[1]);
+                        $num= count($thridlist);
+                        $sql= "SELECT stuId FROM student WHERE stuCard = ".$account;
+                        $stuid=$obj->query($sql);
+                       // echo "stuid  ".$stuid[0]['stuId'];
+                       // echo '</br>';
+                       // echo $thridlist[1]['cId'];
+                        $sql=" INSERT INTO score (cId ,stuId) VALUES ";
+                        $tempdata="  ";
+                        for($i=0;$i<$num-1;$i++){
+                            $tempdata=$tempdata." ( ".$thridlist[$i]['cId']." , ".$stuid[0]['stuId']." ), ";
+                        }
+                        $tempdata=$tempdata." ( ".$thridlist[$num-1]['cId']." , ".$stuid[0]['stuId']." ) ";
+                        $sql=$sql .$tempdata;
+                        $status=$obj->execute($sql);
+                        //var_dump($status) ;
+                        if($status){
+                            $this->success("学生新增成功");
+                        }
+                        else{
+                            $obj = M('');
+                            
+                            if($obj->execute('DELETE FROM student WHERE stuCard = '.$account)){
+
+                            }
+                            else{
+                               $this->error("学生添加出错，请手动删除出错学生 ");
+                            }
+                            $this->error("学生新增失败,当前班级老师还未齐全 ");
+                        }
+                        //echo $sql;
+                        
                     }else{
                         $this->error("学生新增失败");
                     }
@@ -129,9 +167,12 @@
                         $pwd = I("post.pwd");
                         $data['stuPwd'] = isset($pwd) && $pwd != "" ? md5($pwd) : md5(666666);
                         $data['stuSex'] = I("post.sex");
+                        $data['stuMajor'] = I("post.studentclass");
+
                         $data['state'] = 1;
 
                         $repeatCount = 0;
+                        $successCount=0;
                         $state = true;
                         $obj = M('student');
                         $obj->startTrans();
@@ -150,11 +191,41 @@
                             if(!$flag){
                                 $state = false;
                             }
+                            
                         }
 
                         if($state){
                             $obj->commit();
-                            $this->success("批量添加学生成功, 重复数量共{$repeatCount}, 已跳过");
+                            $objM=M('');
+                            $sql="SELECT thrId, cId FROM course WHERE classId =".I("post.studentclass");
+                            $thridlist=$objM->query($sql);
+                            $num= count($thridlist);
+                            for($cardi = $cardArray[0]; $cardi <= $cardArray[1]; $cardi++){
+                                $sql= "SELECT stuId FROM student WHERE stuCard = ".$cardi;
+                                $stuid=$objM->query($sql);
+                                $sql=" INSERT INTO score (cId ,stuId) VALUES ";
+                                $tempdata="  ";
+                                for($i=0;$i<$num-1;$i++){
+                                    $tempdata=$tempdata." ( ".$thridlist[$i]['cId']." , ".$stuid[0]['stuId']." ), ";
+                                }
+                                $tempdata=$tempdata." ( ".$thridlist[$num-1]['cId']." , ".$stuid[0]['stuId']." ) ";
+                                $sql=$sql .$tempdata;
+                                $status=$objM->execute($sql);
+                                if($status){
+                                    //$this->success("学生新增成功");
+                                    $successCount++;
+                                }
+                                else{
+                                    $objM = M('');
+                                    if($objM->execute('DELETE FROM student WHERE stuCard = '.$cardi)){
+                                    }
+                                    else{
+                                       $this->error("学生添加出错，请手动删除出错学生  ".$cardi);
+                                    }
+                                    $this->error("学生新增失败,当前班级老师还未齐全 ");
+                                }
+                            }
+                            $this->success("批量添加学生成功, 重复数量共{$repeatCount}, 已跳过,成功添加个数{$successCount} ");
                         }else{
                             $obj->rollback();
                             $this->error("批量添学生失败");
@@ -168,7 +239,7 @@
         }
 
         /*
-         *  2015年3月10日14:35:33
+         *  2018年3月10日14:35:33
          *  查看学生详情
          */
         public function checkDetail(){
@@ -187,7 +258,7 @@
         }
 
         /*
-         *  2015年3月10日10:35:49
+         *  2018年3月10日10:35:49
          *  重置学生密码
          */
         public function reset($id = 0){
@@ -209,7 +280,7 @@
         }
 
         /*
-         *  2015年3月10日13:34:25
+         *  2018年3月10日13:34:25
          *  将学生移动至回收站
          */
         public function toRecycle($id = 0){
@@ -231,7 +302,7 @@
         }
 
         /*
-         *  2015年3月10日14:13:23
+         *  2018年3月10日14:13:23
          *  将学生状态恢复
          */
         public function recoverOne($id = 0){
@@ -253,7 +324,7 @@
         }
 
         /*
-         *  2015年3月10日14:14:12
+         *  2018年3月10日14:14:12
          *  将学生物理删除
          */
         public function clearOne($id = 0){

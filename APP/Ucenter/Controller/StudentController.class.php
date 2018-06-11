@@ -21,7 +21,7 @@
         }
 
     	/*
-    	 *	2015年3月8日19:12:29
+    	 *	2018年3月8日19:12:29
     	 *	学生管理中心首页
     	 */
         public function index(){
@@ -38,7 +38,7 @@
         }
 
         /*
-    	 *	2015年3月8日19:13:22
+    	 *	2018年3月8日19:13:22
     	 *	学生管理中心个人信息
     	 */
         public function person(){
@@ -47,16 +47,18 @@
             $obj = M("student");
             $usrInfo = $obj->where(array("stuId" => session("ID")))->find();
             $this->assign("usrInfo", $usrInfo);
-
+           // echo $usrInfo['stuPwd'];
+            $where['majorId']=$usrInfo['stuMajor'];
             $obj = M("major");
-            $majorList = $obj->select();
-            $this->assign("majorList", $majorList);
-
+            $major = $obj->where($where)->find();
+            //echo $major;
+            $this->assign("major", $major);
+            //var_dump($major) ;
             $this->display();
         }
 
         /*
-    	 *	2015年3月8日19:13:36
+    	 *	2018年3月8日19:13:36
     	 *	学生管理中心毕设列表
     	 */
         public function bslist(){
@@ -76,7 +78,7 @@
         }
 
         /*
-    	 *	2015年3月8日19:13:54
+    	 *	2018年3月8日19:13:54
     	 *	学生管理中心毕设详情
     	 */
         public function detail(){
@@ -115,22 +117,192 @@
 
             $obj = M('score');
             $where['stuId'] = session("ID");
-            echo session('ID');
+            //echo session('ID');
             //$where['stlinks.state'] = 2;
-            
+            /*  各科成绩综合查询*/
             $scorelist = $obj->where($where)->order('cId asc')->select();
             if(!isset($scorelist)){
                 $this->error("something wrong ", U('Student/index'));
             }
-           // var_dump($scorelist);
             $this->assign("scorelist", $scorelist);
 
+
+            /*分科成绩查询  */
+            /* query chinese score */
+            $obj = M();
+            $sql="select * from score where stuId=".session("ID")." and cId in (select cId from course where cNameId =1)";
+            $chineseScore=$obj->query($sql);
+            $this->assign("chineseScore", $chineseScore);
+            /* query math score */
+            $sql="select * from score where stuId=".session("ID")." and cId in (select cId from course where cNameId =2)";
+            $mathScore=$obj->query($sql);
+            $this->assign("mathScore", $mathScore);
+            /* query english score */
+            $sql="select * from score where stuId=".session("ID")." and cId in (select cId from course where cNameId =3)";
+            $englishScore=$obj->query($sql);
+            $this->assign("englishScore", $englishScore);
+            /* query physical score */
+            $sql="select * from score where stuId=".session("ID")." and cId in (select cId from course where cNameId =4)";
+            $physicalScore=$obj->query($sql);
+            $this->assign("physicalScore", $physicalScore);
+            /* query chemical score */
+            $sql="select * from score where stuId=".session("ID")." and cId in (select cId from course where cNameId =5)";
+            $chemicalScore=$obj->query($sql);
+            $this->assign("chemicalScore", $chemicalScore);
+            /* query biology score */
+            $sql="select * from score where stuId=".session("ID")." and cId in (select cId from course where cNameId =6)";
+            $biologyScore=$obj->query($sql);
+            $this->assign("biologyScore", $biologyScore);
+
+            /* query politics score */
+            $sql="select * from score where stuId=".session("ID")." and cId in (select cId from course where cNameId =7)";
+            $politicsScore=$obj->query($sql);
+            $this->assign("politicsScore", $politicsScore);
+            /* query history score */
+            $sql="select * from score where stuId=".session("ID")." and cId in (select cId from course where cNameId =8)";
+            $historyScore=$obj->query($sql);
+            $this->assign("historyScore", $historyScore);
+            /* query geography score */
+            $sql="select * from score where stuId=".session("ID")." and cId in (select cId from course where cNameId =9)";
+            $geographyScore=$obj->query($sql);
+            $this->assign("geographyScore", $geographyScore);
+            //echo "sql  ".$sql;
+            //var_dump(session);
+
+            /*平均成绩查询*/
+
+            $obj=M('');
+            $sql="SELECT stuMajor FROM student WHERE stuID= ".session('ID');
+            $thisclass=$obj->query($sql);
+          //  var_dump($thisclass);
+           // echo $thisclass[0]['stuMajor'];
+           /* 语文成绩平均分*/
+            $sql="SELECT AVG(score) ,AVG(part1) ,AVG(part2),AVG(part3) FROM score WHERE stuId IN (select stuId from student where stuMajor =".$thisclass[0]['stuMajor'].") AND cId IN (SELECT cId FROM course WHERE cNameId=1)";
+            $avgChinese=$obj->query($sql);
+             $this->assign("avgChinese", $avgChinese);
+            /* 数学成绩平均分*/
+            $sql="SELECT AVG(score) ,AVG(part1) ,AVG(part2),AVG(part3) FROM score WHERE stuId IN (select stuId from student where stuMajor =".$thisclass[0]['stuMajor'].") AND cId IN (SELECT cId FROM course WHERE cNameId=2)";
+            $avgMath=$obj->query($sql);             
+            $this->assign("avgMath", $avgMath);
+
+            /* 英语成绩平均分*/
+            $sql="SELECT AVG(score) ,AVG(part1) ,AVG(part2),AVG(part3) FROM score WHERE stuId IN (select stuId from student where stuMajor =".$thisclass[0]['stuMajor'].") AND cId IN (SELECT cId FROM course WHERE cNameId=3)";
+            $avgEnglish=$obj->query($sql);            
+            $this->assign("avgEnglish", $avgEnglish);
+
+            /* 物理成绩平均分*/
+            $sql="SELECT AVG(score) ,AVG(part1) ,AVG(part2),AVG(part3) FROM score WHERE stuId IN (select stuId from student where stuMajor =".$thisclass[0]['stuMajor'].") AND cId IN (SELECT cId FROM course WHERE cNameId=4)";
+            $avgPhysical=$obj->query($sql);
+            $this->assign("avgPhysical", $avgPhysical);
+
+            /* 化学成绩平均分*/
+            $sql="SELECT AVG(score) ,AVG(part1) ,AVG(part2),AVG(part3) FROM score WHERE stuId IN (select stuId from student where stuMajor =".$thisclass[0]['stuMajor'].") AND cId IN (SELECT cId FROM course WHERE cNameId=5)";
+            $avgChemical=$obj->query($sql);
+            $this->assign("avgChemical", $avgChemical);
+
+            /* 生物成绩平均分*/
+            $sql="SELECT AVG(score) ,AVG(part1) ,AVG(part2),AVG(part3) FROM score WHERE stuId IN (select stuId from student where stuMajor =".$thisclass[0]['stuMajor'].") AND cId IN (SELECT cId FROM course WHERE cNameId=6)";
+            $avgBiology=$obj->query($sql);
+            $this->assign("avgBiology", $avgBiology);
+
+            /* 政治成绩平均分*/
+            $sql="SELECT AVG(score) ,AVG(part1) ,AVG(part2),AVG(part3) FROM score WHERE stuId IN (select stuId from student where stuMajor =".$thisclass[0]['stuMajor'].") AND cId IN (SELECT cId FROM course WHERE cNameId=7)";
+            $avgPoliticals=$obj->query($sql);
+            $this->assign("avgPoliticals", $avgPoliticals);
+
+            /* 历史成绩平均分*/
+            $sql="SELECT AVG(score) ,AVG(part1) ,AVG(part2),AVG(part3) FROM score WHERE stuId IN (select stuId from student where stuMajor =".$thisclass[0]['stuMajor'].") AND cId IN (SELECT cId FROM course WHERE cNameId=8)";
+            $avgHistory=$obj->query($sql);
+            $this->assign("avgHistory", $avgHistory);
+
+            /* 地理成绩平均分*/
+            $sql="SELECT AVG(score) ,AVG(part1) ,AVG(part2),AVG(part3) FROM score WHERE stuId IN (select stuId from student where stuMajor =".$thisclass[0]['stuMajor'].") AND cId IN (SELECT cId FROM course WHERE cNameId=9)";
+            $avgGeography=$obj->query($sql);
+            $this->assign("avgGeography", $avgGeography);
+            //var_dump($avgChinese);
+            /* 单科成绩排名  获得位置local  和总人数 total*/
+            $sql="SELECT stuMajor FROM student WHERE stuId=".session('ID');
+            $class=M('')->query($sql);
+            /*语文 */
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =1) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) ORDER BY score DESC";
+            $chinesetotal=M('')->query($sql);
+            
+            $this->assign("chinesetotal", $chinesetotal[0]['count(*)']);
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =1) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) AND score >= ".$chineseScore[0][score];
+            $chineselocal=M('')->query($sql);
+            echo $chineselocal[0]['count(*)'];
+            $this->assign("chineselocal", $chineselocal[0]['count(*)']);
+            /*数学 */
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =2) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) ORDER BY score DESC";
+            $mathtotal=M('')->query($sql);
+            
+            $this->assign("mathtotal", $mathtotal[0]['count(*)']);
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =2) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) AND score >= ".$mathScore[0][score];
+            $mathlocal=M('')->query($sql);
+            $this->assign("mathlocal", $mathlocal[0]['count(*)']);
+            /*英语 */
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =3) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) ORDER BY score DESC";
+            $englishtotal=M('')->query($sql);
+            
+            $this->assign("englishtotal", $englishtotal[0]['count(*)']);
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =3) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) AND score >= ".$englishScore[0][score];
+            $englishlocal=M('')->query($sql);
+            $this->assign("englishlocal", $englishlocal[0]['count(*)']);
+            /*物理 */
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =4) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) ORDER BY score DESC";
+            $physicaltotal=M('')->query($sql);
+            
+            $this->assign("physicaltotal", $physicaltotal[0]['count(*)']);
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =4) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) AND score >= ".$physicalScore[0][score];
+            $physicallocal=M('')->query($sql);
+            $this->assign("physicallocal", $physicallocal[0]['count(*)']);
+            /*化学 */
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =5) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) ORDER BY score DESC";
+            $chemicaltotal=M('')->query($sql);
+            
+            $this->assign("chemicaltotal", $chemicaltotal[0]['count(*)']);
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =5) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) AND score >= ".$chemicalScore[0][score];
+            $chemicallocal=M('')->query($sql);
+            $this->assign("chemicallocal", $chemicallocal[0]['count(*)']);
+            /*生物 */
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =6) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) ORDER BY score DESC";
+            $biologytotal=M('')->query($sql);
+            
+            $this->assign("biologytotal", $biologytotal[0]['count(*)']);
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =6) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) AND score >= ".$biologyScore[0][score];
+            $biologylocal=M('')->query($sql);
+            $this->assign("biologylocal", $biologylocal[0]['count(*)']);
+            /*政治 */
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =7) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) ORDER BY score DESC";
+            $politicstotal=M('')->query($sql);
+            
+            $this->assign("politicstotal", $politicstotal[0]['count(*)']);
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =7) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) AND score >= ".$politicsScore[0][score];
+            $politicslocal=M('')->query($sql);
+            $this->assign("politicslocal", $politicslocal[0]['count(*)']);
+            /*历史 */
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =8) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) ORDER BY score DESC";
+            $historytotal=M('')->query($sql);
+            
+            $this->assign("historytotal", $historytotal[0]['count(*)']);
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =8) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) AND score >= ".$historyScore[0][score];
+            $historylocal=M('')->query($sql);
+            $this->assign("historylocal", $historylocal[0]['count(*)']);
+            /*地理 */
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =9) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) ORDER BY score DESC";
+            $geographytotal=M('')->query($sql);
+            
+            $this->assign("geographytotal", $geographytotal[0]['count(*)']);
+            $sql="SELECT count(*) FROM score WHERE cId In (select cId from course where cNameId =9) AND stuId IN (SELECT stuId FROM student WHERE stuMajor= ".$class[0][stuMajor]." ) AND score >= ".$geographyScore[0][score];
+            $geographylocal=M('')->query($sql);
+            $this->assign("geographylocal", $geographylocal[0]['count(*)']);
+            
             $this->display();
             
         }
 
         /*
-    	 *	2015年3月8日19:16:18
+    	 *	2018年3月8日19:16:18
     	 *	学生管理中心消息管理
     	 */
         public function msg(){
@@ -168,7 +340,7 @@
         }
 
         /*
-    	 *	2015年3月8日19:14:05
+    	 *	2018年3月8日19:14:05
     	 *	学生管理中心毕设进度
     	 */
         public function plan(){
@@ -196,7 +368,7 @@
         }
 
         /*
-    	 *	2015年3月8日19:14:19
+    	 *	2018年3月8日19:14:19
     	 *	学生管理中心毕设选择
     	 */
         public function choose($GPName = null, $GPKey = null, $GPThrName = null, $GPState = null, $GPSH = null){
@@ -261,7 +433,7 @@
         
 
          /*
-         *  2015年3月8日19:14:19
+         *  2018年3月8日19:14:19
          *  学生管理中心毕设选择
          */
         public function choose_course($GPName = null, $GPKey = null, $GPThrName = null, $GPState = null, $GPSH = null){
@@ -333,28 +505,41 @@
         }
 
         /*
-         *  2015年3月22日12:31:05
+         *  2018年3月22日12:31:05
          *  学生管理学生数据更新
          */
         public function modifyInfo(){
             if(IS_POST){
                 $where['stuId'] = I("post.usr_id");
-
-                $Pwd = I("post.pwd");
+                /*
+                $Pwd = I("post.old_pwd");
+                // echo md5($Pwd);
                 $newPwd = I("post.newpwd");
                 if($Pwd != $newPwd){
                     $data['stuPwd'] = md5($newPwd);
                     $where['stuPwd'] = md5($Pwd);
+                    
                 }
-
+                */
+                $oldPwd = I("post.pwd");
+                $newPwd = I("post.newpwd");
+                if($oldPwd != $newPwd && $oldPwd !=null){
+                    $data['stuPwd'] = md5($newPwd);
+                    $where['stuPwd'] = md5($oldPwd);
+                }
                 $data['stuRealName'] = I("post.realName");
                 $data['stuAge'] = I("post.age");
                 $data['stuSex'] = I("post.sex");
                 $data['stuPhone'] = I("post.phone");
                 $data['stuEmail'] = I("post.email");
-                $data['stuMajor'] = I("post.usr_lvl");
+               // $data['stuMajor'] = I("post.usr_lvl");
                 $data['updateTime'] = time();
-
+                /*
+                echo $oldPwd;
+                echo $newPwd;
+                var_dump($data);
+                var_dump($where);
+                */
                 $obj = M("student");
                 if($obj->where($where)->save($data)){
                     $this->success("用户信息修改成功, 请重新登陆", U('Student/loginout'));
@@ -365,7 +550,7 @@
         }
 
         /*
-         *  2015年3月22日13:29:31
+         *  2018年3月22日13:29:31
          *  学生管理课题详情
          */
         public function checkGPDetail($id = 0){
@@ -398,7 +583,7 @@
         }
 
         /*
-         *  2015年3月22日13:54:13
+         *  2018年3月22日13:54:13
          *  学生管理课题选定
          */
         public function chooseGP($id = 0, $thrid = 0){
@@ -430,7 +615,7 @@
         }
 
         /*
-         *  2015年3月8日20:28:12
+         *  2018年3月8日20:28:12
          *  学生管理中心注销
          */
         public function loginout(){
@@ -439,7 +624,7 @@
         }
 
         /*
-         * 2015年4月17日16:56:09
+         * 2018年4月17日16:56:09
          * 学生退选
          */
         public function tuixuan($id = 0){
@@ -470,7 +655,7 @@
         }
 
         /*
-         * 2015年4月17日17:18:53
+         * 2018年4月17日17:18:53
          * 无用课题删除
          */
         public function shanchu($id = 0){
@@ -490,7 +675,7 @@
         }
 
         /*
-         *  2015年4月18日14:43:00
+         *  2018年4月18日14:43:00
          *  新增消息
          */
         public function addMsg(){
@@ -514,7 +699,7 @@
         }
 
         /*
-         *  2015年4月18日15:51:17
+         *  2018年4月18日15:51:17
          *  删除消息 学生操作
          */
         public function delMsg($id = 0){
@@ -533,7 +718,7 @@
         }
 
         /*
-         *  2015年4月19日15:39:01
+         *  2018年4月19日15:39:01
          *  学生添加进度
          */
         public function addPlan(){

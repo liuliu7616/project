@@ -41,6 +41,7 @@
                     <li><a href="<?php echo U('Student/plan');?>" class="lls <?php echo $state == 'plan' ? 'active' : '';?>">毕设进度</a></li>
                     <li><a href="<?php echo U('Student/choose');?>" class="lls <?php echo $state == 'choose' ? 'active' : '';?>">毕设选题</a></li>    
                     <li><a href="<?php echo U('Student/choose_course');?>" class="lls <?php echo $state == 'choose-course' ? 'active' : '';?>">选择课程</a></li>
+                    <li><a href="<?php echo U('Student/score');?>" class="lls <?php echo $state == 'choose-course' ? 'active' : '';?>">成绩</a></li>
 
                 </ul>
                 </aside>
@@ -88,7 +89,7 @@
             </div> -->
         </div>
     </form>  
-    <p class="text-right text-gray">基于<a class="text-gray" target="_blank" href="#">郑少卓</a>构建   </p>
+
 </div>
 
 <div id="mydialog"> 

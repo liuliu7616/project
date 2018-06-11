@@ -30,11 +30,14 @@
                     <ul class="nav nav-inline nav-menu nav-tabs nav-big">
                         <li><a href="<?php echo U('Teacher/index');?>" class="lls <?php echo $state == 'index' ? 'active' : '';?>">登录信息</a></li>
                         <li><a href="<?php echo U('Teacher/person');?>" class="lls <?php echo $state == 'person' ? 'active' : '';?>">个人管理</a></li>
+
+                        <!--
                         <li><a href="<?php echo U('Teacher/add');?>" class="lls <?php echo $state == 'add' ? 'active' : '';?>">新增毕设</a></li>
                         <li><a href="<?php echo U('Teacher/bslist');?>" class="lls <?php echo $state == 'bslist' ? 'active' : '';?>">毕设列表</a></li>
                         <li><a href="<?php echo U('Teacher/msg');?>" class="lls <?php echo $state == 'msg' ? 'active' : '';?>">消息管理</a></li>
-                        <li><a href="<?php echo U('Teacher/plan');?>" class="lls <?php echo $state == 'plan' ? 'active' : '';?>">进度管理</a></li>
+                        <li><a href="<?php echo U('Teacher/plan');?>" class="lls <?php echo $state == 'plan' ? 'active' : '';?>">进度管理</a></li> -->
                         <li><a href="<?php echo U('Teacher/edit_score');?>" class="lls <?php echo $state == 'edit_score' ? 'active' : '';?>">成绩录入</a></li>
+                        <li><a href="<?php echo U('Teacher/scoreimport');?>" class="lls <?php echo $state == 'scoreimport' ? 'active' : '';?>">成绩批量导入</a></li>
                     </ul>
                 </div>
             </div>
@@ -70,9 +73,9 @@
             <div class="panel">
                 <div class="panel-head"><strong>站点统计</strong></div>
                 <ul class="list-group">
-                    <li><span class="float-right badge bg-red">1</span><span class="icon-user"></span> 用户</li>
+                    <li><span class="float-right badge bg-red">1</span><span class="icon-user"></span> 用户</li><!--
                     <li><span class="float-right badge bg-main"><?php echo ($msgCount); ?></span><span class="icon-file"></span> 消息</li>
-                    <li><span class="float-right badge bg-main"><?php echo ($gpCount); ?></span><span class="icon-shopping-cart"></span> 毕设</li>
+                    <li><span class="float-right badge bg-main"><?php echo ($gpCount); ?></span><span class="icon-shopping-cart"></span> 毕设</li>-->
                 </ul>
             </div>
             <br />
@@ -80,10 +83,10 @@
         <div class="xm9">
             <div class="alert alert-yellow"><span class="close"></span><strong>注意：</strong>您有<?php echo ($msgCount); ?>条信息，<a href="<?php echo U('Teacher/msg');?>">点击查看</a>。</div>
             <div class="alert">
-                <h4>教师课题管理系统</h4>
-                <p class="text-gray padding-top">课题管理系统，动态网站技术<br/>汇集教师信息、课题信息以及其他与之相关的数据，方便教师对数据实时进行管理</p>
-                <a target="_blank" class="button bg-dot icon-user" href="<?php echo U('Teacher/person');?>"> 个人管理</a> 
-                <a target="_blank" class="button bg-main icon-file-text" href="<?php echo U('Teacher/bslist');?>"> 毕设管理</a> 
+                <h4>学生成绩分析系统</h4>
+                <p class="text-gray padding-top">中学生成绩分析系统，动态网站技术<br/>汇集学生信息、成绩信息以及其他与之相关的数据，方便学生获得对自身成绩的分析</p>
+                <a target="_blank" class="button bg-dot icon-user" href="<?php echo U('Teacher/person');?>"> 个人管理</a> <!--
+                <a target="_blank" class="button bg-main icon-file-text" href="<?php echo U('Teacher/bslist');?>"> 毕设管理</a> -->
             </div>
         </div>
     </div>

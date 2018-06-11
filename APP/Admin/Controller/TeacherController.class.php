@@ -7,8 +7,8 @@
         }
 
         /*
-         *  2015年3月8日22:11:36
-         *  后台管理中心-教师列表
+         *  2018年3月8日22:11:36
+         *  后台管理中心-教师列表//sql 语句需要改进 增加班级 课程字段
          */
         public function index($thrCard = null, $thrName = null, $thrSex = null, $thrMajor = null){
             $titles = array();
@@ -41,7 +41,7 @@
             $count  = $obj->where($where)->Count();// 查询满足要求的总记录数
             $Page   = new \Think\Page($count,10);// 实例化分页类 传入总记录数和每页显示的记录数(25)
             $show   = $Page->show();// 分页显示输出// 进行分页数据查询 注意limit方法的参数要使用Page类的属性
-            $usrList = $obj->field('thrId, thrName, thrRealName, thrSex, thrStudy, thrPhone')->where($where)->limit($Page->firstRow.','.$Page->listRows)->select();
+            $usrList = $obj->field('thrId, thrName, thrRealName, thrSex, thrStudy, thrPhone, permission')->where($where)->limit($Page->firstRow.','.$Page->listRows)->select();
             $this->assign('usrList', $usrList);// 赋值数据集
             $this->assign('page',$show);// 赋值分页输出
 
@@ -49,7 +49,7 @@
         }
 
         /*
-         *  2015年3月8日22:10:47
+         *  2018年3月8日22:10:47
          *  后台管理中心-新增教师
          */
         public function add(){
@@ -63,7 +63,7 @@
         }
 
         /*
-         *  2015年3月8日22:10:47
+         *  2018年3月8日22:10:47
          *  后台管理中心-教师数据回收站
          */
         public function recycle(){
@@ -82,8 +82,8 @@
         }
 
         /*
-         *  2015年3月11日9:54:13
-         *  后台管理中心-数据库插入教师数据
+         *  2018年4月26日9:54:13
+         *  后台管理中心-数据库插入教师数据 修改增加教师用户和添加课程
          */
         public function addUsr(){
             if(IS_POST){
@@ -92,6 +92,8 @@
                 $data['thrSex'] = I('post.sex');
 
                 $pwd = I('post.pwd');
+                $cnameid = I('post.TeachingCourse');
+                $classid = I("post.studentclass");
                 $obj = M('teacher');
 
                 if($obj->where($data)->Count() == 1){
@@ -102,17 +104,36 @@
                 $time = time();
                 $data['updateTime'] = $time;
                 $data['createTime'] = $time;
-
+                $thrname=I('post.name');
+               // echo "thrName=".$thrname;
                 if($obj->add($data)){
-                    $this->success("教师信息新增成功");
+                    
+                    $thrid=$obj->where("thrName=".$thrname)->find();
+                    if($thrid!=0){
+                       // unset($data);
+                        $model=M('course');
+                        $temp['thrId']=$thrid['thrId'];
+                        $temp['cNameId']=$cnameid;
+                        $temp['classId']=$classid;
+                       // var_dump($temp);
+                        if($model->add($temp)){
+                            $this->success("教师信息新增成功");
+                        }
+                        else{
+                         $this->error("添加课程失败，请检查");
+                        }
+                    }
+
+
                 }else{
                     $this->error("教师信息新增失败，请检查");
                 }
+
             }
         }
 
         /*
-         *  2015年3月10日14:35:33
+         *  2018年3月10日14:35:33
          *  查看教师详情
          */
         public function checkDetail(){
@@ -131,7 +152,7 @@
         }
 
         /*
-         *  2015年3月10日10:35:49
+         *  2018年3月10日10:35:49
          *  重置教师密码
          */
         public function reset($id = 0){
@@ -152,8 +173,27 @@
             }
         }
 
+
+        public function repermission($id=0){
+            if($id == 0){
+                $this->error('操作错误，请检查您的操作');
+            }else{
+                $obj = M('teacher');
+                $where['thrId'] = $id;
+
+                $data['permission'] = 0;
+
+                $flag = $obj->where($where)->save($data);
+                if($flag){
+                    $this->success('上传权限授予成功');
+                }else{
+                    $this->error('上传权限授予失败，请检查');
+                }
+            }
+        }
+
         /*
-         *  2015年3月10日13:34:25
+         *  2018年3月10日13:34:25
          *  将教师移动至回收站
          */
         public function toRecycle($id = 0){
@@ -175,7 +215,7 @@
         }
 
         /*
-         *  2015年3月10日14:13:23
+         *  2018年3月10日14:13:23
          *  将教师状态恢复
          */
         public function recoverOne($id = 0){
@@ -197,7 +237,7 @@
         }
 
         /*
-         *  2015年3月10日14:14:12
+         *  2018年3月10日14:14:12
          *  将教师物理删除
          */
         public function clearOne($id = 0){

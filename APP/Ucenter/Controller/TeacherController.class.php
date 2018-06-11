@@ -21,7 +21,7 @@
         }
 
     	/*
-    	 *	2015年3月8日19:43:41
+    	 *	2018年3月8日19:43:41
     	 *	教师管理中心首页
     	 */
         public function index(){
@@ -36,10 +36,114 @@
         	$this->assign("title", "登录信息");
             $this->display();
         }
+        public function scoreimport(){
+            $this->assign("title", "成绩批量导入");
+            $tid=session('ID');
+            $sql="SELECT permission FROM teacher WHERE thrId=".$tid;
+              $permission=M("")->query($sql);
+              $this->assign('permission', $permission[0]['permission']);
+            
+            $this->display();
+        }
+
+
+        public function uploadscore(){
+            $sql="update teacher  SET permission =1 WHERE thrId=".session('ID');
+            $obj=M('');
+            $status=$obj->execute($sql);
+           
+            if($status){
+                    $this->success("上传成功");
+            }
+            else{
+                    $this->error("上传失败，请重试");
+            }
+        }
+
+        public function import(){   
+            if (!empty ( $_FILES ['file_stu'] ['name'])){  
+                $tmp_file = $_FILES ['file_stu'] ['tmp_name'];  
+                $file_types = explode ( ".", $_FILES ['file_stu'] ['name'] );  
+                $file_type = $file_types [count ( $file_types ) - 1];  
+      
+                /*判别是不是.xls文件，判别是不是excel文件*/  
+                if (strtolower($file_type)!="xls" && strtolower($file_type)!="xlsx")                
+                {  
+                    $this->error ( '不是Excel文件，重新上传' );  
+                }  
+      
+                /*设置上传路径*/  
+      
+               $savePath = 'Public/upfile/Excel/';  
+               //echo $savePath;  
+      
+                /*以时间来命名上传的文件*/  
+                $str = date ('Ymdhis');   
+                $file_name = $str.".".$file_type;  
+      
+                /*是否上传成功*/  
+                if (!copy ($tmp_file,$savePath.$file_name)) {  
+                    $this->error ('上传失败');  
+                }  
+                  
+                /*读取Excel内容，函数具体实现后文有说明*/  
+                $res = readExcel($savePath.$file_name,"UTF-8",$file_type);  
+      
+                /*重要代码 解决Thinkphp M、D方法不能调用的问题    
+                如果在thinkphp中遇到M 、D方法失效时就加入下面一句代码  
+                */  
+               // spl_autoload_register ( array ('Think', 'autoload' ) );  
+      
+                /*对生成的数组进行数据库的写入*/  
+                //var_dump($res);/*
+                $obj=M('');
+                $sql="SELECT cId FROM course WHERE thrId= ".session('ID');
+                $cid=$obj->query($sql);
+                foreach ( $res as $k => $v ) { 
+                    if ($k != 0) { 
+                        if($k==1){
+                            continue;
+                        }
+                        else{
+                            $where ['stuId'] = $v[1];  
+                            $where ['cId'] = $cid[0]['cId'];  
+                            $data ['part1'] = $v[2];  
+                            $data ['part2'] = $v[3]; 
+                            $data ['part3'] = $v[4];  
+                            $data ['part4'] = $v[5]; 
+                            $data ['part5'] = $v[6];
+                            $data['score']=$v[2]+$v[3]+ $v[4]+$v[5]+$v[6];
+                            //var_dump($data);
+                            $result = M ('score')->where($where)->save($data);  
+                            if ($result===false) {  
+                                $this->error ('导入数据库失败');  
+                            }
+                        } 
+                        
+                    }  
+                }  
+                $this->success('导入成功','scoreImport'); 
+            }  
+        }  
+
+        public function exportexcel(){  
+          
+        //spl_autoload_register(array('Think','autoload'));  
+        //$data= M('stlinks')->select();  //查出数据
+        $obj=M('');
+        $sql="SELECT cId FROM course WHERE thrId= ".session('ID');
+        $cid=$obj->query($sql);
+        $sql="SELECT stuCard, student.stuId,part1,part2,part3,part4,part5 FROM student ,score WHERE student.stuId = score.stuId AND score.cId= ".$cid[0]['cId']."  ORDER BY stuCard ASC;";
+        $data=$obj->query($sql);
+        //echo $sql;
+        //var_dump($data);  
+        $name='scoremodel';    //生成的Excel文件文件名  
+        pushExcel($data,$name);   
+    } 
 
         /*
-    	 *	2015年3月8日19:43:51
-    	 *	教师管理中心个人信息
+    	 *	2018年4月26日19:43:51
+    	 *	教师管理中心个人信息 显示班级和科目
     	 */
         public function person(){
         	$this->assign("title", "个人管理");
@@ -47,7 +151,15 @@
             $obj = M('teacher');
             $usrDetail = $obj->where(array('thrId' => session('ID')))->find();
             $this->assign('usrDetail', $usrDetail);
-
+            $obj=M('');
+            $sql="SELECT cName FROM cname ,course WHERE cName.cNameId=course.cNameId and thrId =".session('ID');
+            $cname=$obj->query($sql);
+            $sql="SELECT majorName FROM major ,course WHERE major.majorId = course.classId and thrId =".session('ID');
+            $classname=$obj->query($sql);
+            $this->assign('cname',$cname);
+            $this->assign('classname',$classname);
+            //var_dump($cname);
+            //var_dump($classname);
             $this->display();
         }
          /*
@@ -55,13 +167,13 @@
          *  后台管理中心-选课
          */
         public function uploadfile(){
-            var_dump( $_POST );
+            //var_dump( $_POST );
              $stuid=$_POST['stuid'];
               $cid=$_POST['cid'];
               
             if($stuid!=0 && $cid!=0){
                 if(!empty($_FILES)){
-                    echo " files";
+                  //  echo " files";
                   //上传单个图像
                     $upload = new \Think\Upload();// 实例化上传类
                     $upload->maxSize   =     0 ;// 设置附件上传大小
@@ -77,8 +189,8 @@
                     if(!$info) {// 上传错误提示错误信息
                         $this->error($upload->getError());
                     }else{// 上传成功 获取上传文件信息
-                        echo $info;
-                        var_dump($info);
+                    //    echo $info;
+                        //var_dump($info);
                          $paperUrl=$info['savepath'].$info['savename'];
                          $obj=M("score");
                          $where["cId"]=$cid;
@@ -103,7 +215,7 @@
         }
 
         /*
-    	 *	2015年3月8日19:44:04
+    	 *	2018年3月8日19:44:04
     	 *	教师管理中心毕设列表
     	 */
         public function bslist(){
@@ -146,34 +258,47 @@
             $show   = $Page->show();// 分页显示输出// 进行分页数据查询 注意limit方法的参数要使用Page类的属性
             $Model =  M("");
          //$sql = 'select a.id,a.title,b.content from think_test1 as a, think_test2 as b where a.id=b.id '.$map.' order by a.id '.$sort.' limit '.$p->firstRow.','.$p->listRows;
-            $sql= "SELECT score.stuId,score.cId,student.stuCard,student.stuRealName,score.paperUrl,score.score from
+            $sql= "SELECT score.stuId,score.cId,student.stuCard,student.stuRealName,score.paperUrl,score.part1,score.part2,score.part3,score.score from
                 student,score WHERE student.stuId= score.stuId and score.cId =
                 (select  cid from course WHERE thrId=".$tid." )".$sort.' limit '.$Page->firstRow.','.$Page->listRows;
             //echo $sql;
             $scoreList = $Model->query($sql);
             $this->assign('scoreList', $scoreList);
               $this->assign('page',$show);// 赋值分页输出
+              $sql="SELECT permission FROM teacher WHERE thrId=".$tid;
+              $permission=M("")->query($sql);
+              $this->assign('permission', $permission[0]['permission']);
+              //var_dump($permission[0]['permission']);
             $this->display();
         }
          /*        
          *  2018年4月22日14:45:05
          *  教师管理中心新增保存成绩
          */
-         public function savescore($cid=0,$stuid=0,$score=0){
-           // echo "coming in the savescore function";
-        /*   echo $cid;
-           echo"</br>";           
-           echo $stuid;
-           echo"</br>";
-           echo $score;
-           echo"</br>";*/
-            if($cid !=0 && $stuid !=0 && $score<=100 && $score>0 ){
+         public function savescore(){
+        
+       
+           $cid=(int)$_POST['cid'];
+           $stuid=(int)$_POST['stuid'];
+           $score1=(int)$_POST['score1'];
+           $score2=(int)$_POST['score2'];
+           $score3=(int)$_POST['score3'];
+
+           
+            if($cid !=0 && $stuid !=0 && $score<=100 && $score1>=0&& $score2>=0 && $score3>=0 ){
                 $obj = M('score');
                 $where['cId']=$cid;
                 $where['stuId']=$stuid;
-                $data['score']=$score;
-                if($obj->where($where)->save($data)){
-                    $this->success("成绩保存成功", U('Teacher/edit_score'));
+                $data['score']=$score1+$score2+$score3;
+                $data['part1']=$score1;
+                $data['part2']=$score2;
+                $data['part3']=$score3;
+                if($obj->where($where)->save($data)){        
+
+                    // $this->success("成绩保存成功", U('Teacher/edit_score'));
+                    $temdata['state']=1;
+                    echo json_encode($temdata);
+                   
                 }
                 else{
                     $this->error("成绩保存出错，请仔细检查");
@@ -186,7 +311,7 @@
 
 
         /*
-    	 *	2015年3月8日19:45:05
+    	 *	2018年3月8日19:45:05
     	 *	教师管理中心新增毕设
     	 */
         public function add(){
@@ -200,7 +325,7 @@
         }
 
         /*
-    	 *	2015年3月8日19:44:21
+    	 *	2018年3月8日19:44:21
     	 *	教师管理中心消息管理
     	 */
         public function msg(){
@@ -237,7 +362,7 @@
         }
 
         /*
-    	 *	2015年3月8日19:44:33
+    	 *	2018年3月8日19:44:33
     	 *	教师管理中心毕设进度
     	 */
         public function plan(){
@@ -257,7 +382,7 @@
         }   
 
         /*
-         *  2015年3月11日12:17:57   2018.4.18  增加所教课程这个选项 和课容量
+         *  2018年3月11日12:17:57   2018.4.18  增加所教课程这个选项 和课容量
          *  教师管理中心个人信息修改
          */
         public function modifyInfo(){
@@ -281,11 +406,11 @@
                 $data['showState'] = ($tPhone != "" ? $tPhone : "0") . ($tEmail != "" ? $tEmail : "0") . ($tAddress != "" ? $tAddress : "0") . ($tStudy != "" ? $tStudy : "0");
 
                 $where['thrId'] = I('post.usrId');
-                if($oldpwd != $newpwd){
-                    $data['thrPwd'] = md5($newpwd);
-                    $where['thrPwd'] = md5($oldpwd);
+                if($oldPwd != $newPwd && $oldPwd !=null){
+                    $data['thrPwd'] = md5($newPwd);
+                    $where['thrPwd'] = md5($oldPwd);
                 }
-                 $obj = M("course");
+                /* $obj = M("course");
                  $temp_where['thrId']=I('post.usrId');
                  $temp_where2['thrId']=I('post.usrId');
                  $temp_where2['cNameId']=$TeachingCourse;
@@ -314,11 +439,11 @@
                         }else{
                             $this->error("所教课程修改失败 教师未选择学科");
                         }
-                }
-                // var_dump($data);var_dump($where);exit;
+                }*/
+
                 $obj = M("teacher");
                 if($obj->where($where)->save($data)){
-                    $this->success("用户信息修改成功，请重新登陆", U("Teacher/person"));
+                    $this->success("用户信息修改成功，请重新登陆", U("Teacher/loginout"));
                 }else{
                     $this->error("用户信息修改失败，请检查");
                 }
@@ -326,7 +451,7 @@
         }
 
         /*
-         *  2015年3月11日15:05:24
+         *  2018年3月11日15:05:24
          *  教师管理中心新增毕设
          */
         public function addDesign(){
@@ -357,7 +482,7 @@
         }
 
         /*
-         *  2015年3月11日15:05:24
+         *  2018年3月11日15:05:24
          *  教师管理中心新增毕设
          */
         public function modifyGP($id = 0){
@@ -380,7 +505,7 @@
         }
 
         /*
-         *  2015年3月18日13:36:20
+         *  2018年3月18日13:36:20
          *  教师管理中心课题详情
          */
         public function checkGP(){
@@ -398,7 +523,7 @@
         }
 
         /*
-         *  2015年3月18日13:29:09
+         *  2018年3月18日13:29:09
          *  教师管理中心修改毕设
          */
         public function updateGp(){
@@ -429,7 +554,7 @@
         }
 
         /*
-         *  2015年3月18日17:00:18
+         *  2018年3月18日17:00:18
          *  教师管理中心删除课题
          */
         public function delGP($id = 0){
@@ -449,7 +574,7 @@
         }
 
         /*
-         *  2015年3月22日15:08:55
+         *  2018年3月22日15:08:55
          *  教师管理中心学生课题选择
          */
         public function checkStuList(){
@@ -473,7 +598,7 @@
         }
 
         /*
-         *  2015年3月22日16:10:12
+         *  2018年3月22日16:10:12
          *  教师管理中心确定课题
          */
         public function confirm($id = 0){
@@ -511,7 +636,7 @@
         }
 
         /*
-         *  2015年3月22日16:54:21
+         *  2018年3月22日16:54:21
          *  教师管理中心学生详情
          */
         public function chkStuInfo(){
@@ -535,7 +660,7 @@
         }
 
         /*
-         *  2015年3月18日17:04:04
+         *  2018年3月18日17:04:04
          *  教师管理中心注销
          */
         public function loginout(){
@@ -544,7 +669,7 @@
         }
 
         /*
-         *  2015年4月17日18:07:48
+         *  2018年4月17日18:07:48
          *  更新gproject state
          */
         public function updateGPState(){
@@ -559,7 +684,7 @@
         }
 
         /*
-         *  2015年4月18日14:43:00
+         *  2018年4月18日14:43:00
          *  新增消息
          */
         public function addMsg(){
@@ -606,7 +731,7 @@
         }
 
         /*
-         *  2015年4月18日15:51:17
+         *  2018年4月18日15:51:17
          *  删除消息 学生操作
          */
         public function delMsg($id = 0){

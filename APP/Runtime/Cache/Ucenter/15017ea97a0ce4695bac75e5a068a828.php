@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/project/Public/Styles/css/admin.css">
     <link rel="stylesheet" href="/project/Public/Styles/css/page.css">
     <link rel="stylesheet" href="/project/Public/Styles/css/adminme.css">
+    <link rel="stylesheet" href="/project/Public/Styles/css/select.css">
     <script src="/project/Public/Styles/js/jquery.js"></script>
     <script src="/project/Public/Styles/js/pintuer.js"></script>
     <script src="/project/Public/Styles/js/respond.js"></script>
@@ -33,6 +34,7 @@
                         <li><a href="<?php echo U('Teacher/bslist');?>" class="lls <?php echo $state == 'bslist' ? 'active' : '';?>">毕设列表</a></li>
                         <li><a href="<?php echo U('Teacher/msg');?>" class="lls <?php echo $state == 'msg' ? 'active' : '';?>">消息管理</a></li>
                         <li><a href="<?php echo U('Teacher/plan');?>" class="lls <?php echo $state == 'plan' ? 'active' : '';?>">进度管理</a></li>
+                        <li><a href="<?php echo U('Teacher/edit_score');?>" class="lls <?php echo $state == 'edit_score' ? 'active' : '';?>">成绩录入</a></li>
                     </ul>
                 </div>
             </div>

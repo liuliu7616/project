@@ -34,13 +34,13 @@
                 <aside>
                 <ul class="nav">
                     <li><a href="<?php echo U('Student/index');?>" class="lls <?php echo $state == 'index' ? 'active' : '';?>">登录信息</a></li>
-                    <li><a href="<?php echo U('Student/person');?>" class="lls <?php echo $state == 'person' ? 'active' : '';?>">个人管理</a></li>
+                    <li><a href="<?php echo U('Student/person');?>" class="lls <?php echo $state == 'person' ? 'active' : '';?>">个人管理</a></li> <!--
                     <li><a href="<?php echo U('Student/bslist');?>" class="lls <?php echo $state == 'bslist' ? 'active' : '';?>">毕设列表</a></li>
                     <li><a href="<?php echo U('Student/detail');?>" class="lls <?php echo $state == 'detail' ? 'active' : '';?>">毕设详情</a></li>
                     <li><a href="<?php echo U('Student/msg');?>" class="lls <?php echo $state == 'msg' ? 'active' : '';?>">消息管理</a></li>
                     <li><a href="<?php echo U('Student/plan');?>" class="lls <?php echo $state == 'plan' ? 'active' : '';?>">毕设进度</a></li>
                     <li><a href="<?php echo U('Student/choose');?>" class="lls <?php echo $state == 'choose' ? 'active' : '';?>">毕设选题</a></li>    
-                    <li><a href="<?php echo U('Student/choose_course');?>" class="lls <?php echo $state == 'choose-course' ? 'active' : '';?>">选择课程</a></li>
+                    <li><a href="<?php echo U('Student/choose_course');?>" class="lls <?php echo $state == 'choose-course' ? 'active' : '';?>">选择课程</a></li> -->
                     <li><a href="<?php echo U('Student/score');?>" class="lls <?php echo $state == 'choose-course' ? 'active' : '';?>">成绩</a></li>
 
                 </ul>
@@ -58,7 +58,7 @@
         <div class="xm3">
             <div class="panel border-back">
                 <div class="panel-body text-center">
-                    <img src="/project/Public/Images/sex_<?php echo session("SEX") == 1 ? 'a' : 'n';?>.jpg" width="120" class="radius-circle" /><br /><?php echo ($usrName); ?>
+                    <img src="/project/Public/Images/sex_<?php echo session("SEX") == 1 ? 'a' : 'v';?>.jpg" width="120" class="radius-circle" /><br /><?php echo ($usrName); ?>
                 </div>
                 <div class="panel-foot bg-back border-back">&nbsp;<br/>您好，<?php echo ($usrName); ?> <br>&nbsp;</div>
             </div>
@@ -66,8 +66,8 @@
             <div class="panel">
                 <div class="panel-head"><strong>站点统计</strong></div>
                 <ul class="list-group">
-                    <li><span class="float-right badge bg-red">1</span><span class="icon-user"></span> 用户</li>
-                    <li><span class="float-right badge bg-main"><?php echo ($msgCount); ?></span><span class="icon-file"></span> 消息</li>
+                    <li><span class="float-right badge bg-red">1</span><span class="icon-user"></span> 用户</li><!--
+                    <li><span class="float-right badge bg-main"><?php echo ($msgCount); ?></span><span class="icon-file"></span> 消息</li> -->
                 </ul>
             </div>
             <br />
@@ -75,14 +75,14 @@
         <div class="xm9">
             <div class="alert alert-yellow"><span class="close"></span><strong>注意：</strong>您有<?php echo ($msgCount); ?>条信息，<a href="<?php echo U('Student/msg');?>">点击查看</a>。</div>
             <div class="alert">
-                <h4>学生课题管理系统</h4>
-                <p class="text-gray padding-top">课题管理系统，动态网站技术<br/>汇集学生信息、课题信息以及其他与之相关的数据，方便学生对数据实时进行管理</p>
-                <a target="_blank" class="button bg-dot icon-user" href="<?php echo U('Student/person');?>"> 个人管理</a> 
-                <a target="_blank" class="button bg-main icon-file-text" href="<?php echo U('Student/bslist');?>"> 毕设管理</a> 
+                <h4>学生成绩分析系统</h4>
+                <p class="text-gray padding-top">中学生成绩分析系统，动态网站技术<br/>汇集学生信息、成绩信息以及其他与之相关的数据，方便学生获得对自身成绩的分析</p>
+                <a target="_blank" class="button bg-dot icon-user" href="<?php echo U('Student/person');?>"> 个人管理</a> <!--
+                <a target="_blank" class="button bg-main icon-file-text" href="<?php echo U('Student/bslist');?>"> 毕设管理</a> -->
             </div>
         </div>
     </div>
-    <p class="text-right text-gray">基于<a class="text-gray" target="_blank" href="#">郑少卓</a>构建   </p>
+    
 </div>
 
             </div>

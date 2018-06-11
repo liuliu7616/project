@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+</head>
+<body>
+<style>
+       
+        #scoretable{
+            font-size:26px;
+            color:#1C86EE;
+        }
+        #container{
+            height:50px;
+            width:300px;
+        }
+    </style>
+<form method="post" action="__URL__/import" enctype="multipart/form-data">  
+    <h3>导入成绩 -Excel表：</h3><input  type="file" name="file_stu" />  
+    <input type="submit" id="import" value="导入" />  
+</form> 
+<div id='container'></div>
+
+<a  id="scoretable"  href="__URL__/exportexcel">点此下载成绩单 </a>
+
+</body>
+<script type="text/javascript">
+if({$permission}==1){
+            document.getElementById("import").setAttribute("disabled", true);
+           
+        }
+        else{
+            document.getElementById("import").setAttribute("bg-red", true);
+            //document.getElementById("submitbutton").setAttribute("disabled", false);
+        }
+</script>
+</html>

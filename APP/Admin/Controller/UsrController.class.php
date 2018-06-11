@@ -7,45 +7,50 @@
         }
 
         /*
-         *  2015年3月8日22:18:06
+         *  2018年3月8日22:18:06
          *  后台管理中心-用户列表
          */
         public function index(){
             $titles = array();
-            $titles['prt'] = "用户";
+            $titles['prt'] = "管理员用户";
             $titles['prtLink'] = CONTROLLER_NAME;
-            $titles['son'] = "用户列表";
+            $titles['son'] = "管理员列表";
             $this->assign("titles", $titles);
+            $where = array();
+            //$where['state'] > 0;
 
             $obj = M('admin');
             // $where['state'] = 1;
-            $usrList = $obj->field('adminId, adminName, adminRealName, adminSex, adminPhone, adminEmail, state')->where($where)->select();
+            $count  = $obj->where("state>0 ")->Count();// 查询满足要求的总记录数
+            $Page   = new \Think\Page($count,10);// 实例化分页类 传入总记录数和每页显示的记录数(25)
+            $show   = $Page->show();// 分页显示输出// 进行分页数据查询 注意limit方法的参数要使用Page类的属性
+            $usrList = $obj->field('adminId, adminName, adminRealName, adminSex, adminPhone, adminEmail, state')->where("state>0 ")->select();
             $this->assign("usrList", $usrList);
-            
+            $this->assign('page',$show);// 赋值分页输出
             $this->display();
         }
 
         /*
-         *  2015年3月8日22:18:22
+         *  2018年3月8日22:18:22
          *  后台管理中心-新增用户
          */
         public function add(){
             $titles = array();
-            $titles['prt'] = "用户";
+            $titles['prt'] = "管理员用户";
             $titles['prtLink'] = CONTROLLER_NAME;
-            $titles['son'] = "新增用户";
+            $titles['son'] = "新增管理员";
             $this->assign("titles", $titles);
 
             $this->display();
         }
 
         /*
-         *  2015年3月8日22:18:43
+         *  2018年3月8日22:18:43
          *  后台管理中心-回收站
          */
         public function recycle(){
             $titles = array();
-            $titles['prt'] = "用户";
+            $titles['prt'] = "管理员用户";
             $titles['prtLink'] = CONTROLLER_NAME;
             $titles['son'] = "回收站";
             $this->assign("titles", $titles);
@@ -60,7 +65,7 @@
 
 
         /*
-         *  2015年3月10日10:35:49
+         *  2018年3月10日10:35:49
          *  新增用户，写入数据库
          */
         public function addusr(){
@@ -91,7 +96,7 @@
         }
 
         /*
-         *  2015年3月10日10:35:49
+         *  2018年3月10日10:35:49
          *  重置用户密码
          */
         public function reset($id = 0){
@@ -113,7 +118,7 @@
         }
 
         /*
-         *  2015年3月10日13:34:25
+         *  2018年3月10日13:34:25
          *  将用户移动至回收站
          */
         public function toRecycle($id = 0){
@@ -136,7 +141,7 @@
         }
 
         /*
-         *  2015年3月10日14:13:23
+         *  2018年3月10日14:13:23
          *  将用户状态恢复
          */
         public function recoverOne($id = 0){
@@ -159,7 +164,7 @@
         }
 
         /*
-         *  2015年3月10日14:14:12
+         *  2018年3月10日14:14:12
          *  将用户物理删除
          */
         public function clearOne($id = 0){
@@ -179,7 +184,7 @@
         }
 
         /*
-         *  2015年3月10日14:35:33
+         *  2018年3月10日14:35:33
          *  查看用户详情
          */
         public function checkDetail(){

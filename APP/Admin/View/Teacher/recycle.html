@@ -43,7 +43,7 @@
                     <th width="140">真实姓名</th>
                     <th width="140">教师性别</th>
                     <th width="140">联系方式</th>
-                    <th width="*">研究方向</th>
+                    <th width="240">个人介绍</th>
                     <th width="180">操作</th>
                 </tr>
                 <volist name="usrList" id="index">
@@ -57,7 +57,8 @@
                         <?php echo $index['thrSex'] == 1 ? '男' : '女'; ?>
                     </td>
                     <td>{$index.thrPhone}</td>
-                    <td>{$index.thrthrdy}</td>
+                    <td>{$index.thrStudy}</td>
+                    
                     <td>
                         <input name='thrid' type="hidden" value="{$index.thrId}" />
                         <a class="button border-blue button-little dialogs" name="recover" href="#" data-toggle="click" data-target="#recoverdialog" data-mask="1" data-width="30%">恢复</a>
@@ -72,7 +73,6 @@
         </div>
         </form>
         <br />
-        <p class="text-right text-gray">基于<a class="text-gray" target="_blank" href="#">郑少卓</a>构建   </p>
     </div>
     
     <div id="cleardialog"> 

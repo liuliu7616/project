@@ -34,13 +34,13 @@
                 <aside>
                 <ul class="nav">
                     <li><a href="<?php echo U('Student/index');?>" class="lls <?php echo $state == 'index' ? 'active' : '';?>">登录信息</a></li>
-                    <li><a href="<?php echo U('Student/person');?>" class="lls <?php echo $state == 'person' ? 'active' : '';?>">个人管理</a></li>
+                    <li><a href="<?php echo U('Student/person');?>" class="lls <?php echo $state == 'person' ? 'active' : '';?>">个人管理</a></li> <!--
                     <li><a href="<?php echo U('Student/bslist');?>" class="lls <?php echo $state == 'bslist' ? 'active' : '';?>">毕设列表</a></li>
                     <li><a href="<?php echo U('Student/detail');?>" class="lls <?php echo $state == 'detail' ? 'active' : '';?>">毕设详情</a></li>
                     <li><a href="<?php echo U('Student/msg');?>" class="lls <?php echo $state == 'msg' ? 'active' : '';?>">消息管理</a></li>
                     <li><a href="<?php echo U('Student/plan');?>" class="lls <?php echo $state == 'plan' ? 'active' : '';?>">毕设进度</a></li>
                     <li><a href="<?php echo U('Student/choose');?>" class="lls <?php echo $state == 'choose' ? 'active' : '';?>">毕设选题</a></li>    
-                    <li><a href="<?php echo U('Student/choose_course');?>" class="lls <?php echo $state == 'choose-course' ? 'active' : '';?>">选择课程</a></li>
+                    <li><a href="<?php echo U('Student/choose_course');?>" class="lls <?php echo $state == 'choose-course' ? 'active' : '';?>">选择课程</a></li> -->
                     <li><a href="<?php echo U('Student/score');?>" class="lls <?php echo $state == 'choose-course' ? 'active' : '';?>">成绩</a></li>
 
                 </ul>
@@ -67,7 +67,8 @@
             <div class="field fieldme">
                 <div class="input-group">
                     <span class="addon"><input name="chkPwd" type="checkbox" value="1" /></span>
-                    <input type="password" class="input" name="pwd" size="50" value="<?php echo ($usrInfo['stuPwd']); ?>" placeholder="请输入原始密码" disabled="disabled" />
+                    <input type="password" class="input" name="pwd" size="50" value="<?php echo ($usrInfo['stuPwd']); ?>" placeholder="请输入原始密码" disabled="true" />
+                    <input type="hidden" type="password" class="input" name="old_pwd" size="50" value="<?php echo ($usrInfo['stuPwd']); ?>"   />
                 </div>
             </div>
         </div>
@@ -103,15 +104,16 @@
             <div class="label"><label>用户性别</label></div>
             <div class="field">
                 <div class="button-group radio"> 
-                    <label class="button active">
-                        <input name="sex" value="1" <?php echo $usrInfo['stuSex'] == 1 ? 'checked="checked"' : null; ?> type="radio"><span class="icon icon-male"></span> 男
+                    <label class="button <?php echo $usrInfo['stuSex'] == 1 ? 'active' : null; ?> ">
+                        <input name="sex" value="1" type="radio "><span class="icon icon-male"></span>男 
                     </label> 
-                    <label class="button ">
-                        <input name="sex" value="2" <?php echo $usrInfo['stuSex'] == 2 ? 'checked="checked"' : null; ?> type="radio"><span class="icon icon-female"></span> 女
+                    <label class="button <?php echo $usrInfo['stuSex'] == 2 ? 'active' : null; ?>">
+                        <input name="sex" value="2"  type="radio"><span class="icon icon-female"></span> 女
                     </label> 
                 </div>
             </div>
         </div>
+       
         <div class="form-group">
             <div class="label"><label for="phone">联系方式</label></div>
             <div class="field">
@@ -121,16 +123,13 @@
         <div class="form-group">
             <div class="label"><label for="email">邮件地址</label></div>
             <div class="field">
-                <input type="text" class="input" id="email" name="email" size="50" placeholder="邮件地址" data-validate="required:请填写邮件地址,email:请填写正确的邮件地址" value="<?php echo ($usrInfo['stuEmail']); ?>" />
+                <input type="text" class="input" id="email" name="email" size="50" placeholder="邮件地址" data-validate="required:请填写邮件地址,email:请填写正确的邮件地址"  value="<?php echo ($usrInfo['stuEmail']); ?>" />
             </div>
         </div>
         <div class="form-group">
-            <div class="label"><label for="usr_lvl">专业方向</label></div>
+            <div class="label"><label for="usr_lvl">班级</label></div>
             <div class="field">
-                <select class="input" name="usr_lvl" id="usr_lvl" data-validate="required:请选择用户组">
-                    <option value="">请选择</option> 
-                    <?php if(is_array($majorList)): $i = 0; $__LIST__ = $majorList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$index): $mod = ($i % 2 );++$i;?><option value="<?php echo ($index["majorId"]); ?>" <?php echo $index['majorId'] == $usrInfo['stuMajor'] ? 'selected="selected"' : null;?> ><?php echo ($index["majorName"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-                </select>
+                <input type="text" class="input" id="studentclass" name="studentclass" size="50" value="<?php echo ($major['majorName']); ?> " disabled="disabled"/>
             </div>
         </div> 
         
@@ -140,7 +139,6 @@
             <button class="button bg-yellow form-reset " type="reset">后退</button>  
         </div>                
     </form>   
-    <p class="text-right text-gray">基于<a class="text-gray" target="_blank" href="#">郑少卓</a>构建   </p>
 </div>
 
 <script>

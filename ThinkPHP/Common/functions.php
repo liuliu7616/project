@@ -1456,3 +1456,103 @@ function think_filter(&$value){
         $value .= ' ';
     }
 }
+function readExcel($file_name,$encode,$file_type)  
+{  
+      //引用PHPExcel相关类，放在vendor目录下即可如此引用  
+      Vendor("PHPExcel");   
+      Vendor("PHPExcel.IOFactory");    
+  
+  
+      if(strtolower ($file_type)=='xls')//判断excel表类型为2003还是2007  
+      {    
+          Vendor("Excel.PHPExcel.Reader.Excel5");     
+          $objReader = PHPExcel_IOFactory::createReader('Excel5');    
+      }elseif(strtolower ($file_type)=='xlsx')    
+      {    
+          Vendor("Excel.PHPExcel.Reader.Excel2007");     
+          $objReader = PHPExcel_IOFactory::createReader('Excel2007');    
+      }    
+        
+      $objReader->setReadDataOnly(true);    
+      $objPHPExcel = $objReader->load($file_name);  
+  
+      $objWorksheet = $objPHPExcel->getActiveSheet();    
+      $highestRow = $objWorksheet->getHighestRow();    
+      $highestColumn = $objWorksheet->getHighestColumn();    
+      $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);    
+      $excelData = array();    
+      for ($row = 1; $row <= $highestRow; $row++) {    
+          for ($col = 0; $col < $highestColumnIndex; $col++) {    
+              $excelData[$row][] =(string)$objWorksheet->getCellByColumnAndRow($col, $row)->getValue();    
+              }    
+      }    
+      return $excelData;   
+  
+}  
+
+
+
+function pushExcel($data,$name='Excel')  
+{  
+    // 导出excel函数* 
+    Vendor("PHPExcel");    
+    Vendor("PHPExcel.IOFactory");    
+    error_reporting(E_ALL);  
+    date_default_timezone_set('Europe/London');  
+      
+    $xlsTitle = iconv('utf-8','gb2312',$name);//文件名称  
+    $objPHPExcel = new PHPExcel();  
+  
+    //以下是一些设置 ，什么作者  标题啊之类的  
+    $objPHPExcel->getProperties()->setCreator("yang")  
+                          ->setLastModifiedBy("yang")  
+                          ->setTitle("score model")  
+                          ->setSubject("Data export")  
+                          ->setDescription("Data Backup")  
+                          ->setKeywords("excel")  
+                          ->setCategory("result file");  
+    //以下就是对处理Excel里的数据，  
+    //横着取数据，主要是这一步，其他基本都不要改，这里最好能够做成对$data的遍历
+    //先处理以下标题
+    
+    $objPHPExcel->setActiveSheetIndex(0)  
+          ->setCellValue('A1', 'stuCard')      
+          ->setCellValue('B1', 'stuId')  
+          ->setCellValue('C1', 'part1')
+          ->setCellValue('D1', 'part2')
+          ->setCellValue('E1', 'part3')
+          ->setCellValue('F1', 'part4')
+          ->setCellValue('G1', 'part5');  
+    //数据部分
+    
+    foreach($data as $k => $v){  
+        $num=$k+2;  
+        $objPHPExcel->setActiveSheetIndex(0)  
+        //Excel的第A列，uid是你查出数组的键值，下面以此类推  
+          ->setCellValue('A'.$num, $v['stuCard'])      
+          ->setCellValue('B'.$num, $v['stuId'])  
+          ->setCellValue('C'.$num, $v['part1'])
+          ->setCellValue('D'.$num, $v['part2'])
+          ->setCellValue('E'.$num, $v['part3'])
+          ->setCellValue('F'.$num, $v['part4'])
+          ->setCellValue('G'.$num, $v['part5']);  
+    }  
+  
+    $objPHPExcel->getActiveSheet()->setTitle('Sheet1');  
+    $objPHPExcel->setActiveSheetIndex(0);  
+    ob_end_clean();  
+    header("Pragma: public"); //下面是一堆header的设置，测试的时候加了好多，现在不清楚哪个没用  
+    header("Expires: 0");  
+    header('Content-Type: application/vnd.ms-excel;charset=utf-8;name="'.$xlsTitle.'.xls"');  
+    header("Content-Type: application/force-download");  
+    header("Content-Type: application/octet-stream");  
+    header("Content-Type: application/download");  
+    header('Content-Disposition: attachment;filename="'.$name.'.xls"');  
+    header('Cache-Control: max-age=0');  
+    header("Content-Transfer-Encoding:binary");  
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');  
+    $objWriter->save('php://output');  
+    exit;    
+ 
+
+}

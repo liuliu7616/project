@@ -31,12 +31,29 @@
                 <div class="field">
                     <div class="button-group radio"> 
                         <label class="button active">
-                            <input name="sex" value="1" checked="checked" type="radio"> 男
+                            <input name="sex" value="1" checked="checked" type="radio"> <span class="icon icon-male"></span>男
                         </label> 
+                       
                         <label class="button">
-                            <input name="sex" value="2" type="radio"> 女
+                            <input name="sex" value="2" type="radio"> <span class="icon icon-female"></span>女
                         </label> 
                     </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="label"><label for="studentClass">班级</label></div>
+                 <div class="field">        
+                    <select type="text" class="input" name="studentclass" >
+                      <option value = 1>七年级一班</option>
+                      <option value = 2>七年级二班</option>
+                      <option value = 3>七年级三班</option>
+                      <option value = 4>八年级一班</option>
+                      <option value = 5>八年级二班</option>
+                      <option value = 6>八年级三班</option>
+                      <option value = 7>九年级一班</option>
+                      <option value = 8>九年级二班</option>
+                      <option value = 8>九年级三班</option>
+                    </select>
                 </div>
             </div>
             <div class="form-button">
@@ -44,7 +61,6 @@
                 <button class="button bg-yellow form-reset " type="reset">重设</button>
             </div>
         </form>   
-        <p class="text-right text-gray">基于<a class="text-gray" target="_blank" href="#">郑少卓</a>构建   </p>
     </div>
 
     <script>

@@ -34,6 +34,9 @@
                     <li class="<?php echo $flag['prt'] == 'admin' ? 'active' : '';?>">
                         <a href="<?php echo U('Admin/index');?>" class="icon-home"> 开始</a>
                         <ul>
+                            <li >
+                                <a href="<?php echo U('person/person');?>">个人信息管理</a>
+                            </li>
                             <li class="<?php echo $flag['son'] == 'admin_index' ? 'active' : '';?>">
                                 <a href="<?php echo U('Admin/index');?>">登陆信息</a>
                             </li>
@@ -48,14 +51,18 @@
                             </li>
                             <?php endif; ?>
                             <?php if(session("state") == 1): ?>
+                                <!--
                             <li class="<?php echo $flag['son'] == 'desgin_index' ? 'active' : '';?>">
                                 <a href="<?php echo U('Design/index');?>">毕设管理</a>
                             </li>
+                            <li class="<?php echo $flag['son'] == 'select_course_index' ? 'active' : '';?>">
+                                <a href="<?php echo U('Selectcourse/index');?>">选课管理</a>
+                            </li>
                             <li class="<?php echo $flag['son'] == 'msg_index' ? 'active' : '';?>">
                                 <a href="<?php echo U('Msg/index');?>">消息管理</a>
-                            </li>
+                            </li> -->
                             <li class="<?php echo $flag['son'] == 'usr_index' ? 'active' : '';?>">
-                                <a href="<?php echo U('Usr/index');?>">用户管理</a>
+                                <a href="<?php echo U('Usr/index');?>">管理员用户管理</a>
                             </li>
                             <?php endif; ?>
                         </ul>
@@ -91,6 +98,7 @@
                             </li>
                         </ul>
                     </li>
+                    <!--
                     <?php endif; ?>
                     <?php if(session("state") == 1): ?>
                     <li class="<?php echo $flag['prt'] == 'design' ? 'active' : '';?>">
@@ -99,9 +107,7 @@
                             <li class="<?php echo $flag['son'] == 'design_index' ? 'active' : '';?>">
                                 <a href="<?php echo U('Design/index');?>">毕设列表</a>
                             </li>
-                            <!-- <li class="<?php echo $flag['son'] == 'design_recycle' ? 'active' : '';?>">
-                                <a href="<?php echo U('Design/recycle');?>">回收站</a>
-                            </li> -->
+                            
                         </ul>
                     </li>
                     <li class="<?php echo $flag['prt'] == 'msg' ? 'active' : '';?>">
@@ -110,19 +116,17 @@
                             <li class="<?php echo $flag['son'] == 'msg_index' ? 'active' : '';?>">
                                 <a href="<?php echo U('Msg/index');?>">消息列表</a>
                             </li>
-                            <!-- <li class="<?php echo $flag['son'] == 'msg_recycle' ? 'active' : '';?>">
-                                <a href="<?php echo U('Msg/recycle');?>">回收站</a>
-                            </li> -->
+                            
                         </ul>
-                    </li>
+                    </li> -->
                     <li class="<?php echo $flag['prt'] == 'usr' ? 'active' : '';?>">
-                        <a href="<?php echo U('Usr/index');?>" class="icon-th-list"> 用户</a>
+                        <a href="<?php echo U('Usr/index');?>" class="icon-th-list"> 管理员用户</a>
                         <ul>
                             <li class="<?php echo $flag['son'] == 'usr_index' ? 'active' : '';?>">
-                                <a href="<?php echo U('Usr/index');?>">用户列表</a>
+                                <a href="<?php echo U('Usr/index');?>">管理员列表</a>
                             </li>
                             <li class="<?php echo $flag['son'] == 'usr_add' ? 'active' : '';?>">
-                                <a href="<?php echo U('Usr/add');?>">新增用户</a>
+                                <a href="<?php echo U('Usr/add');?>">新增管理员</a>
                             </li>
                             <li class="<?php echo $flag['son'] == 'usr_recycle' ? 'active' : '';?>">
                                 <a href="<?php echo U('Usr/recycle');?>">回收站</a>
@@ -179,10 +183,10 @@
                 <div class="field">
                     <div class="button-group radio"> 
                         <label class="button active">
-                            <input name="sex" value="1" checked="checked" type="radio"> 男
+                            <input name="sex" value="1" checked="checked" type="radio"><span class="icon icon-male"></span> 男
                         </label> 
                         <label class="button">
-                            <input name="sex" value="2" type="radio"> 女
+                            <input name="sex" value="2" type="radio"><span class="icon icon-female"></span> 女
                         </label> 
                     </div>
                 </div>
@@ -227,7 +231,6 @@
                 <button class="button bg-yellow form-reset " type="reset">重设</button>
             </div>
         </form>  
-        <p class="text-right text-gray">基于<a class="text-gray" target="_blank" href="#">郑少卓</a>构建   </p>
     </div>
 </section>
 

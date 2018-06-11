@@ -48,10 +48,10 @@
                 <div class="label"><label>用户性别</label></div>
                 <div class="field">
                     <div class="button-group radio"> 
-                        <label class="button active">
+                        <label class="button <?php echo $usrDetail['thrSex'] == 1 ? 'active' : null; ?>">
                             <input name="sex" value="1" <?php echo $usrDetail['thrSex'] == 1 ? 'checked="checked"' : null; ?> type="radio"><span class="icon icon-male"></span> 男
                         </label> 
-                        <label class="button ">
+                        <label class="button <?php echo $usrDetail['thrSex'] == 2 ? 'active' : null; ?>">
                             <input name="sex" value="2" <?php echo $usrDetail['thrSex'] == 2 ? 'checked="checked"' : null; ?> type="radio"><span class="icon icon-female"></span> 女
                         </label> 
                     </div>
@@ -91,7 +91,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="label"><label for="usr_lvl">研究方向</label></div>
+                <div class="label"><label for="usr_lvl">个人介绍</label></div>
                 <div class="form-group">
                     <div class="field">
                       <div class="input-group">
@@ -103,31 +103,24 @@
             </div> 
              <div class="form-group">
                 <div class="label"><label for="age">所教课程</label></div>
- <!--                  
-                <div class="field">
-                    <input type="text" class="input" name="age" size="50"  value="{$usrDetail['thrAge']}" />
-                </div> -->
-
                 <div class="field">        
-                    <select type="text" class="input" name="TeachingCourse" >
-                      <option value = 1>语文</option>
-                      <option value = 2>数学</option>
-                      <option value = 3>英语</option>
-                      <option value = 4>物理</option>
-                      <option value = 5>化学</option>
-                      <option value = 6>生物</option>
-                      <option value = 7>政治</option>
-                      <option value = 8>历史</option>
-                      <option value = 8>地理</option>
-                    </select>
+                    <input type="text" class="input" name="cname" size="50"  value="{$cname[0][cName]}"
+                        disabled="true" />
                 </div>
             </div>
-               <div class="form-group">
+            <div class="form-group">
+                <div class="label"><label for="age">所教班级</label></div>
+                <div class="field">        
+                    <input type="text" class="input" name="teachingclass" size="50"  value="{$classname[0]['majorName']}"
+                        disabled="true" />
+                </div>
+            </div>
+              <!-- <div class="form-group">
                 <div class="label"><label for="fullNum">课容量</label></div>
                 <div class="field">
                     <input type="text" class="input" name="fullNum" size="50" placeholder="课容量" data-validate="required:请填写课容量,number:课容量必须为正整数" value="" />
                 </div>
-            </div>
+            </div>-->
             
             <div class="form-button">
                 <input type="hidden" name="usrId" value="{$usrDetail['thrId']}"/> 

@@ -41,12 +41,13 @@
             <table class="table table-hover">
                 <tr>
                     <th width="80">教师编号</th>
-                    <th width="120">登陆账号</th>
-                    <th width="140">真实姓名</th>
-                    <th width="140">教师性别</th>
-                    <th width="140">联系方式</th>
-                    <th width="*">研究方向</th>
-                    <th width="180">操作</th>
+                    <th width="80">登陆账号</th>
+                    <th width="80">真实姓名</th>
+                    <th width="80">教师性别</th>
+                    <th width="80">联系方式</th>
+                    <th width="80">个人介绍</th>
+                    <th width="120">成绩上传状态</th>
+                    <th width="280">操作</th>
                 </tr>
                 <volist name="usrList" id="index">
                 <tr>
@@ -58,10 +59,13 @@
                     </td>
                     <td>{$index.thrPhone}</td>
                     <td>{$index.thrStudy}</td>
+                    <td> <?php echo $index['permission'] == 0 ? '未上传' : '已上传'; ?>
+                    </td>
                     <td>
                         <input type="hidden" name="id" value="{$index.thrId}"/>
                         <a class="button border-yellow button-little dialogs" name="check" href="#" data-toggle="click" data-target="#checkdialog" data-mask="1" data-width="30%">查看</a>
                         <a class="button border-blue button-little" name="reset" href="#">重置密码</a>
+                        <a class="button border-red button-little" data-width="20%" name="repermission" href="#">授权上传</a>
                         <a class="button border-green button-little dialogs" name="delete" href="#" data-toggle="click" data-target="#mydialog" data-mask="1" data-width="30%">删除</a>
                     </td>
                 </tr>
@@ -72,7 +76,7 @@
             </div>
         </div>
         <br />
-        <p class="text-right text-gray">基于<a class="text-gray" target="_blank" href="#">郑少卓</a>构建   </p>
+        
     </div>
     
     <div id="checkdialog"> 
@@ -149,6 +153,10 @@
             $(".table a[name='reset']").click(function(){
                 var id = $(this).parent().find("input[name='id']").val();
                 window.location.href = "{:U('Teacher/reset/id/" + id +"')}";
+            });
+            $(".table a[name='repermission']").click(function(){
+                var id = $(this).parent().find("input[name='id']").val();
+                window.location.href = "{:U('Teacher/repermission/id/" + id +"')}";
             });
 
             $(".table a[name='delete']").click(function(){
