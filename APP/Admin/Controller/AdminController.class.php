@@ -24,10 +24,12 @@
             $Data['ip']     = GetHostByName($_SERVER['SERVER_NAME']);
             $Data['language']   = 'PHP';
             $Data['db_os']      = 'MYSQL';
-            $Data['db_version'] = mysqli_get_server_info();
+            //$Data['db_version'] = mysqli_get_server_info();
+            $Data['db_version'] = '4.7.9';
             $Data['domainname'] = $_SERVER["HTTP_HOST"];
             $this->assign('system', $Data);
-            
+           // echo $dbVersion;
+           // var_dump($Data);
             $titles = array();
             $titles['prt'] = null;
             $titles['prtLink'] = CONTROLLER_NAME;
