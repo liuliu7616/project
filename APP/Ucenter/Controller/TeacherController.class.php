@@ -73,8 +73,14 @@
                 }  
       
                 /*设置上传路径*/  
-      
-               $savePath = 'Public/upfile/Excel/';  
+                /*
+                
+                windows  
+                $savePath = "Public/upfile/Excel/";
+                linux
+                $savePath = ".Public/upfile/Excel/";  
+                */
+               $savePath = "Public/upfile/Excel/";  
                //echo $savePath;  
       
                 /*以时间来命名上传的文件*/  
